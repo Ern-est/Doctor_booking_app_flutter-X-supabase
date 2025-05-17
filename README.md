@@ -40,6 +40,8 @@ The goal of this app is to provide a foundational, scalable architecture for a r
 
 ![doctor2](https://github.com/user-attachments/assets/82aa117b-20ab-40ca-b6a3-c8c2f3313aaf)
 
+![roleselection](https://github.com/user-attachments/assets/e4eb2b0a-7dba-4cf8-8903-76e30252932b)
+
 ![doctor3](https://github.com/user-attachments/assets/549f1ff6-038a-4258-868e-0f61ce6060e7)
 
 ![doctor4](https://github.com/user-attachments/assets/cc334e80-c4f0-4b6a-b179-921f0bdb8b57)
