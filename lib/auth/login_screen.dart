@@ -35,7 +35,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
       final user = response.user;
       if (user != null) {
-        // Fetch the user's role from 'users' table
         final userData =
             await supabase
                 .from('users')
@@ -69,42 +68,110 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Welcome Back!",
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: isLoading ? null : _login,
-              child:
-                  isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text("Login"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/register');
-              },
-              child: const Text("Don't have an account? Register"),
-            ),
-          ],
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Welcome Back!",
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF009688),
+                ),
+              ),
+              const SizedBox(height: 32),
+              TextField(
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                cursorColor: Color(0xFF009688),
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  labelStyle: TextStyle(color: Color(0xFF009688)),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Color(0xFF009688), width: 2),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Color(0xFF009688), width: 1),
+                  ),
+                  prefixIcon: Icon(Icons.email, color: Color(0xFF009688)),
+                ),
+              ),
+
+              const SizedBox(height: 16),
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                textInputAction: TextInputAction.done,
+                cursorColor: Color(0xFF009688),
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  labelStyle: TextStyle(color: Color(0xFF009688)),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Color(0xFF009688), width: 2),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Color(0xFF009688), width: 1),
+                  ),
+                  prefixIcon: Icon(Icons.lock, color: Color(0xFF009688)),
+                ),
+              ),
+
+              const SizedBox(height: 32),
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: isLoading ? null : _login,
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  child:
+                      isLoading
+                          ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 3,
+                            ),
+                          )
+                          : const Text(
+                            "Login",
+                            style: TextStyle(color: Color(0xFF009688)),
+                          ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/register');
+                },
+                child: Text(
+                  "Don't have an account? Register",
+                  style: TextStyle(
+                    color: Color(0xFF009688),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

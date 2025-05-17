@@ -37,44 +37,106 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = const Color(0xFF009688);
+    final backgroundColor = const Color(0xFFF1F8F7);
+
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('Patient Dashboard'),
+        backgroundColor: primaryColor,
+        title: const Text(
+          'Patient Dashboard',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        elevation: 3,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () {
-              Supabase.instance.client.auth.signOut();
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                '/login',
-                (_) => false,
-              );
+            tooltip: 'Logout',
+            onPressed: () async {
+              await Supabase.instance.client.auth.signOut();
+              if (mounted) {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/login',
+                  (_) => false,
+                );
+              }
             },
           ),
         ],
       ),
-      body:
-          isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : doctors.isEmpty
-              ? const Center(child: Text('No doctors available'))
-              : ListView.builder(
-                itemCount: doctors.length,
-                itemBuilder: (context, index) {
-                  final doctor = doctors[index];
-                  return Card(
-                    margin: const EdgeInsets.all(8),
-                    child: ListTile(
-                      title: Text(doctor['full_name'] ?? 'Unnamed Doctor'),
-                      trailing: ElevatedButton(
-                        onPressed: () => bookAppointment(doctor['id']),
-                        child: const Text('Book'),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child:
+              isLoading
+                  ? const Center(
+                    child: CircularProgressIndicator(color: Color(0xFF009688)),
+                  )
+                  : doctors.isEmpty
+                  ? Center(
+                    child: Text(
+                      'No doctors available',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: primaryColor.withOpacity(0.7),
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                  );
-                },
-              ),
+                  )
+                  : ListView.separated(
+                    itemCount: doctors.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      final doctor = doctors[index];
+                      return Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        elevation: 4,
+                        color: Colors.white,
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 12,
+                          ),
+                          title: Text(
+                            doctor['full_name'] ?? 'Unnamed Doctor',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          trailing: ElevatedButton(
+                            onPressed: () => bookAppointment(doctor['id']),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 12,
+                              ),
+                              elevation: 3,
+                            ),
+                            child: const Text(
+                              'Book',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+        ),
+      ),
     );
   }
 }

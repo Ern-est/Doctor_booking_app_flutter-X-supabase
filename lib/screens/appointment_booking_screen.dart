@@ -90,46 +90,137 @@ class _AppointmentBookingScreenState extends State<AppointmentBookingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = const Color(0xFF009688);
+    final backgroundColor = const Color(0xFFF1F8F7);
+
     final dateLabel =
         _selectedDateTime == null
             ? 'Pick Appointment Date & Time'
             : DateFormat('yyyy-MM-dd – hh:mm a').format(_selectedDateTime!);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Book Appointment')),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _reasonController,
-                decoration: const InputDecoration(
-                  labelText: 'Reason for Visit',
-                  border: OutlineInputBorder(),
+      backgroundColor: backgroundColor,
+      appBar: AppBar(
+        backgroundColor: primaryColor,
+        title: const Text(
+          'Book Appointment',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        elevation: 3,
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+          child: Card(
+            elevation: 6,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                      controller: _reasonController,
+                      validator:
+                          (value) =>
+                              value == null || value.isEmpty
+                                  ? 'Please enter a reason'
+                                  : null,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        labelText: 'Reason for Visit',
+                        labelStyle: TextStyle(
+                          color: primaryColor.withOpacity(0.8),
+                          fontWeight: FontWeight.w600,
+                        ),
+                        filled: true,
+                        fillColor: const Color(0xFFE0F2F1),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
+                        ),
+                      ),
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Pick date & time button
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: _pickDateTime,
+                        icon: const Icon(Icons.calendar_today),
+                        label: Text(
+                          dateLabel,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color:
+                                _selectedDateTime == null
+                                    ? primaryColor.withOpacity(0.7)
+                                    : primaryColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          side: BorderSide(
+                            color: primaryColor.withOpacity(0.6),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 36),
+
+                    // Confirm button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: _isLoading ? null : _bookAppointment,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          elevation: 5,
+                        ),
+                        child:
+                            _isLoading
+                                ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 3,
+                                    color: Colors.white,
+                                  ),
+                                )
+                                : const Text(
+                                  'Confirm Appointment',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                      ),
+                    ),
+                  ],
                 ),
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty
-                            ? 'Please enter a reason'
-                            : null,
               ),
-              const SizedBox(height: 16),
-              ElevatedButton.icon(
-                onPressed: _pickDateTime,
-                icon: const Icon(Icons.calendar_today),
-                label: Text(dateLabel),
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _isLoading ? null : _bookAppointment,
-                child:
-                    _isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text('Confirm Appointment'),
-              ),
-            ],
+            ),
           ),
         ),
       ),

@@ -2,9 +2,10 @@ import 'package:doctor_appointment_app/auth/login_screen.dart';
 import 'package:doctor_appointment_app/auth/register_screen.dart';
 import 'package:doctor_appointment_app/auth/role_selection_screen.dart';
 import 'package:doctor_appointment_app/doctor/doctor_dashboard.dart';
+import 'package:doctor_appointment_app/doctor/doctor_profile_screen.dart'; // ✅
 import 'package:doctor_appointment_app/patient/patient_dashboard.dart';
 import 'package:doctor_appointment_app/screens/appointment_booking_screen.dart';
-import 'package:doctor_appointment_app/screens/doctor_details_screen.dart'; // ✅ import doctor details screen
+import 'package:doctor_appointment_app/screens/doctor_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -72,7 +73,7 @@ class MyApp extends StatelessWidget {
               return _errorRoute('Invalid doctor ID');
             }
 
-          case '/doctor-details': // ✅ new route for doctor profile
+          case '/doctor-details':
             final doctorId = settings.arguments;
             if (doctorId is String) {
               return MaterialPageRoute(
@@ -81,6 +82,9 @@ class MyApp extends StatelessWidget {
             } else {
               return _errorRoute('Invalid doctor ID');
             }
+
+          case '/doctor-profile': // ✅ updated route
+            return MaterialPageRoute(builder: (_) => const UserProfileScreen());
 
           default:
             return _errorRoute('Page not found');
